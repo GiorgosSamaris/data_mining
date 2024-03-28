@@ -34,15 +34,15 @@ def drop_nonuniform_columns(data_frame, verbose=False):
         None
     """
     if "index" in data_frame.columns:
-        data_frame.drop(['index'], axis='columns', inplace=True)
+        data_frame.drop(['index'], axis='columns')
         if verbose:
             print("Removed column 'index'")
 
     if "Unknown: 0" in data_frame.columns:
-        data_frame.drop(['Unknown: 0'], axis='columns', inplace=True)
+        data_frame.drop(['Unknown: 0'], axis='columns')
         if verbose:
             print("Removed column 'Unknown: 0'")
-    return None
+    return data_frame
 
 def drop_outliers(data_frame, verbose = False):
     """
@@ -62,9 +62,17 @@ def drop_outliers(data_frame, verbose = False):
         Q3 = data_frame[column].quantile(0.75)
         IQR = Q3 - Q1
         threshold = 1.5
-        # outliers = data_frame[(data_frame[column] < Q1 - threshold * IQR) | (data_frame[column] > Q3 + threshold * IQR)]
+        
         data_frame[(data_frame[column] < Q1 - threshold * IQR) | (data_frame[column] > Q3 + threshold * IQR)] = data_frame[column].median()
-        # drop rows containing outliers
-        # data_frame = data_frame.drop(outliers.index)
+        
     if verbose:
         print("Size of file after dropping outliers: {}".format(data_frame.shape))
+
+    return data_frame
+
+
+def data_binning(data_frame, verbose = False):
+    pass
+    for column in ['back_x','back_y','back_z','thigh_x','thigh_y','thigh_z']:
+        bins = pd.qcut(data_frame[column],duplicates="allow")
+        print(bins)
