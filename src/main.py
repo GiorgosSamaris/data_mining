@@ -17,13 +17,17 @@ for file in os.listdir(constants.CSV_PATH):
     #Check for outliers by calculating IQR for each column
     temp_df = csv_handler.drop_outliers(temp_df)
 
-    #Seperate sensor data 
-    back_df, thigh_df = csv_handler.seperate_sensors(temp_df)
+    #get subject id
+    s_name = file.split('.')[0]
+    s_id = constants.subject_id[s_name]
 
-    print(back_df)
-    #Data bining
-    # csv_handler.data_binning(temp_df)
-    # homogeneous_df= pd.concat([homogeneous_df, temp_df])
+    #Add id of subject as an extra column
+    temp_df.insert(9, "subject_id", s_id)
+
+    #merge the dataframes
+    homogeneous_df= pd.concat([homogeneous_df, temp_df])
+    
+    
 
 #remove index columns from csv 21 & 15
-print(homogeneous_df.shape)
+print(homogeneous_df)

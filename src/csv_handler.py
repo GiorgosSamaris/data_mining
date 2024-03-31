@@ -78,7 +78,7 @@ def data_binning(data_frame, verbose = False):
         print(bins)
         
 
-def seperate_sensors(data_frame, verbose = False):
+def separate_sensors(data_frame, verbose = False):
     back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z"]]
     thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z"]]
 
