@@ -76,3 +76,10 @@ def data_binning(data_frame, verbose = False):
     for column in ['back_x','back_y','back_z','thigh_x','thigh_y','thigh_z']:
         bins = pd.qcut(data_frame[column],duplicates="allow")
         print(bins)
+        
+
+def seperate_sensors(data_frame, verbose = False):
+    back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z"]]
+    thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z"]]
+
+    return back_sensor_data, thigh_sensor_data
