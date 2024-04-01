@@ -22,7 +22,7 @@ def read_csv(input_file, verbose = False):
         print("Missing values: {}".format(csv_data_frame.isnull().sum()))
     return csv_data_frame 
 
-def drop_nonuniform_columns(data_frame, verbose=False):
+def drop_nonuniform_columns(data_frame, verbose=False) -> pd.DataFrame:
     """
     Drop columns 'index' and 'Unknown: 0' from the DataFrame if they exist.
 
@@ -34,14 +34,14 @@ def drop_nonuniform_columns(data_frame, verbose=False):
         None
     """
     if "index" in data_frame.columns:
-        data_frame.drop(['index'], axis='columns')
+        data_frame = data_frame.drop(['index'], axis='columns')
         if verbose:
             print("Removed column 'index'")
 
-    if "Unknown: 0" in data_frame.columns:
-        data_frame.drop(['Unknown: 0'], axis='columns')
+    if "Unnamed: 0" in data_frame.columns:
+        data_frame = data_frame.drop(['Unnamed: 0'], axis='columns')
         if verbose:
-            print("Removed column 'Unknown: 0'")
+            print("Removed column 'Unnamed: 0'")
     return data_frame
 
 def drop_outliers(data_frame, verbose = False):
