@@ -1,6 +1,6 @@
 import pandas as pd
 import os 
-import matplotlib as plt
+import plotter
 import constants
 import csv_handler
 homogeneous_df = pd.DataFrame()
@@ -14,9 +14,11 @@ for file in os.listdir(constants.CSV_PATH):
     # temp_df = csv_handler.drop_outliers(temp_df)
     subject_name = file.split('.')[0]
     subject_id = constants.subject_id[subject_name]
-    temp_df["subject_id"] = subject_id
+    temp_df['subject_id'] = subject_id
     print(temp_df.head(1))
+    # plotter.activity_pie(temp_df)
+    plotter.activity_histogram(temp_df)
+    input("Enter to continue...")
     homogeneous_df= pd.concat([homogeneous_df, temp_df])
 
-#remove index columns from csv 21 & 15
 print(homogeneous_df.head(0))
