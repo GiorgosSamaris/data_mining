@@ -17,7 +17,8 @@ for file in os.listdir(constants.CSV_PATH):
     temp_df['subject_id'] = subject_id
     print(temp_df.head(1))
     # plotter.activity_pie(temp_df)
-    plotter.activity_histogram(temp_df)
+    # plotter.activity_histogram(temp_df)
+    plotter.plot_gyro(temp_df)
     input("Enter to continue...")
     homogeneous_df= pd.concat([homogeneous_df, temp_df])
 
