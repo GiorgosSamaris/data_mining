@@ -1,6 +1,6 @@
 import pandas as pd
 import os 
-import matplotlib.pyplot as plt
+import plotter
 import constants
 import csv_handler
 

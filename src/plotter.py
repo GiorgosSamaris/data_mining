@@ -28,3 +28,19 @@ def activity_histogram(df_input):
     plt.title("Subject "+str(df_input['subject_id'][1]))
     plt.show()
     return
+
+def plot_gyro(df_input):
+    fig, ax = plt.subplots(nrows=2, ncols=1)
+    ax[0].plot(df_input['back_x'], label='back_x')
+    ax[0].plot(df_input['back_y'], label='back_y')
+    ax[0].plot(df_input['back_z'], label='back_z')
+    ax[0].set_title("Back Sensor Data")
+    ax[0].set_ylabel("Gyro Data")
+    ax[0].legend(loc='best')
+    ax[1].plot(df_input['thigh_x'], label='thigh_x')
+    ax[1].plot(df_input['thigh_y'], label='thigh_y')
+    ax[1].plot(df_input['thigh_z'], label='thigh_z')
+    ax[1].set_title("Thigh Sensor Data")
+    ax[1].set_ylabel("Gyro Data")
+    ax[1].legend(loc='best')
+    plt.show()
