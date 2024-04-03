@@ -1,6 +1,8 @@
 import pandas as pd
 import constants
 
+
+
 def read_csv(input_file, verbose = False):
     """
     Read a CSV file and return its contents as a pandas DataFrame.
@@ -22,7 +24,9 @@ def read_csv(input_file, verbose = False):
         print("Missing values: {}".format(csv_data_frame.isnull().sum()))
     return csv_data_frame 
 
-def drop_nonuniform_columns(data_frame, verbose=False) -> pd.DataFrame:
+
+
+def drop_nonuniform_columns(data_frame, verbose=False):
     """
     Drop columns 'index' and 'Unknown: 0' from the DataFrame if they exist.
 
@@ -31,18 +35,20 @@ def drop_nonuniform_columns(data_frame, verbose=False) -> pd.DataFrame:
         verbose (bool, optional): If True, print a message for each column dropped. Default is False.
 
     Returns:
-        None
+        pandas.DataFrame : Altered or unaltered dataframe depending on if it had one (or both) of the columns: 'index' and 'Unknown: 0'
     """
     if "index" in data_frame.columns:
-        data_frame = data_frame.drop(['index'], axis='columns')
+        data_frame.drop(['index'], axis='columns', inplace= True)
         if verbose:
             print("Removed column 'index'")
 
-    if "Unnamed: 0" in data_frame.columns:
-        data_frame = data_frame.drop(['Unnamed: 0'], axis='columns')
+    if "Unknown: 0" in data_frame.columns:
+        data_frame.drop(['Unknown: 0'], axis='columns', inplace= True)
         if verbose:
             print("Removed column 'Unnamed: 0'")
     return data_frame
+
+
 
 def drop_outliers(data_frame, verbose = False):
     """
@@ -53,7 +59,7 @@ def drop_outliers(data_frame, verbose = False):
         verbose (bool, optional): If True, print the size of the DataFrame before and after dropping outliers. Default is False.
 
     Returns:
-        None
+        pandas.DataFrame
     """
     if verbose:
         print("Size of file before dropping outliers: {}".format(data_frame.shape))
@@ -70,16 +76,55 @@ def drop_outliers(data_frame, verbose = False):
 
     return data_frame
 
+    
 
-def data_binning(data_frame, verbose = False):
-    pass
-    for column in ['back_x','back_y','back_z','thigh_x','thigh_y','thigh_z']:
-        bins = pd.qcut(data_frame[column],duplicates="allow")
-        print(bins)
-        
+def separate_sensors(data_frame):
 
-def separate_sensors(data_frame, verbose = False):
-    back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z"]]
-    thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z"]]
+    """
+    Given a data frame it separates sensor readings into to different data frames
+
+    Parameters:
+        data_frame (pandas.DataFrame): The DataFrame to be separated on two new dataframes.
+    
+
+    Returns:
+        back_sensor_data (pandas.DataFrame), thigh_sensor_data (pandas.DataFrame)
+    """
+    if "subject_id" in data_frame.columns:
+
+        back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z", "subject_id"]]
+        thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z", "subject_id"]]
+
+    else:
+
+        back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z"]]
+        thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z"]]
 
     return back_sensor_data, thigh_sensor_data
+
+
+
+def add_subject_id(data_frame, file_name, column_pos = 8):
+
+    """
+    Given a data frame it separates sensor readings into to different data frames
+
+    Parameters:
+        data_frame (pandas.DataFrame): The DataFrame on which the new column containing the sunject id will be added.
+        file_name (str): The filename from which the current data frame was created
+        column_pos (int): Position of the new column (starts from index 0)
+    
+
+    Returns:
+        data_frame (pandas.DataFrame)
+    """
+
+    #get subject id
+    s_name = file_name.split('.')[0]
+    s_id = constants.subject_id[s_name]
+
+    #Add id of subject as an extra column
+    data_frame.insert(column_pos, "subject_id", s_id)
+
+    return data_frame
+
