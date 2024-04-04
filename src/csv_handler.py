@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import constants
 
 
@@ -128,3 +129,17 @@ def add_subject_id(data_frame, file_name, column_pos = 8):
 
     return data_frame
 
+def separate_activities(data_frame):
+    """
+    Separate classes of each dataframe to new dataframe
+
+    Parameters:
+        data_frame (pandas.DataFrame): The DataFrame to be separated.
+
+    Returns:
+        dict : A dictionary containing the separated dataframes.
+    """
+    separated_data = {}
+    for i in np.unique(data_frame['label']):
+        separated_data[i] = data_frame[data_frame['label'] == i]
+    return separated_data
