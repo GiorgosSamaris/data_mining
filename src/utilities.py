@@ -32,6 +32,28 @@ class CSVHandler:
 class Preprocessing:
 
     @staticmethod
+    def drop_dates(data_frame, timestamp_format = "%Y-%m-%d %H:%M:%S.%f") -> pd.DataFrame:
+        """
+        Drops the date part from the timestamp column of the DataFrame. 
+
+        Parameters:
+            data_frame (pandas.DataFrame): The DataFrame from which columns are to be dropped.
+            timestamp_format (str): format of the timestamp as it appears in the orginial DataFrame. Default is "%Y-%m-%d %H:%M:%S.%f".
+
+        Returns:
+            pandas.DataFrame: The returned DataFrame only has time on the timestamp column
+
+        """
+
+        #Convert timestamp(str) -> timestamp(numpy.datetime64)
+        data_frame["timestamp"] = pd.to_datetime(data_frame["timestamp"], format= timestamp_format)
+
+        #Extract time part from timestamp (Also converts timestamp(numpy.datetime64) -> timestamp(datetime.datetime))
+        data_frame["timestamp"] = data_frame["timestamp"].dt.time
+
+        return data_frame
+
+    @staticmethod
     def drop_nonuniform_columns(data_frame, verbose=False):
         """
         Drop columns 'index' and 'Unknown: 0' from the DataFrame if they exist.
