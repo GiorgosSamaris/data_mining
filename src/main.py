@@ -40,55 +40,28 @@ def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
 def main():
 
 
-    df = pd.read_csv(constants.CSV_PATH + "S006.csv")
-
-    df = preproc.drop_dates(data_frame=df)
-
-    print(df)
-
-    # plt.plot(df["timestamp"], df["back_x"])
-
-    # test_date_1 = df["timestamp"].values[0]
-
-    # print("date is: {} and is type of: {}".format(test_date_1,type(test_date_1)))
-
-    # format =  "%Y-%m-%d %H:%M:%S.%f"
-
-    # dt_test_1 = datetime.datetime.strptime(test_date_1, format)
-
-    # print("date is: {} and is type of: {}".format(dt_test_1,type(dt_test_1)))
-
-    # print("time is: {}".format(dt_test_1.time()))
-
-    # df["timestamp"] = pd.to_datetime(df["timestamp"], format= format)
-
-    # df["timestamp"] = df["timestamp"].dt.time
-
-    # print("column timestamp {} is now of type {}".format(df["timestamp"].values[0],type(df["timestamp"].values[0])))
 
 
+    if(constants.PROCESS):
+        merged_df = read_data(constants.CSV_PATH, preproc=False)
 
+        if not os.path.exists(os.path.join(os.path.dirname(__file__), "/../processed/")):
 
-    # if(constants.PROCESS):
-    #     merged_df = read_data(constants.CSV_PATH, preproc=False)
+            print("process folder does not exist, creating...")
+            # If it doesn't exist, create it
+            os.makedirs(os.path.join(os.path.dirname(__file__), "/../processed/"))
 
-    #     if not os.path.exists(os.path.join(os.path.dirname(__file__), "/../processed/")):
+        #convert data to csv
+        merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
 
-    #         print("process folder does not exist, creating...")
-    #         # If it doesn't exist, create it
-    #         os.makedirs(os.path.join(os.path.dirname(__file__), "/../processed/"))
+    if(constants.GRAPH):
+        merged_df = pd.read_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
 
-    #     #convert data to csv
-    #     merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+        plotter.plot_gyro(merged_df)
 
-    # if(constants.GRAPH):
-    #     merged_df = pd.read_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+        # back_sensor_df, thigh_sensor_df = preproc.separate_sensors(merged_df)
 
-    #     plotter.plot_gyro(merged_df)
-
-    #     # back_sensor_df, thigh_sensor_df = preproc.separate_sensors(merged_df)
-
-    #     # plot_data = back_sensor_df.loc[:,["timestamp","back_x"]]
+        # plot_data = back_sensor_df.loc[:,["timestamp","back_x"]]
 
 
 if __name__ == "__main__":
