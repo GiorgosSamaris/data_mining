@@ -27,6 +27,7 @@ class CSVHandler:
             print(csv_data_frame.info())
             print("Missing values: {}".format(csv_data_frame.isnull().sum()))
         return csv_data_frame 
+    
 
 
 class Preprocessing:
@@ -48,8 +49,30 @@ class Preprocessing:
         #Convert timestamp(str) -> timestamp(numpy.datetime64)
         data_frame["timestamp"] = pd.to_datetime(data_frame["timestamp"], format= timestamp_format)
 
-        #Extract time part from timestamp (Also converts timestamp(numpy.datetime64) -> timestamp(datetime.datetime))
+        #Extract time part from timestamp (Also converts timestamp(numpy.datetime64) -> timestamp(datetime.time))
         data_frame["timestamp"] = data_frame["timestamp"].dt.time
+
+        return data_frame
+    
+    @staticmethod
+    def convert_to_seconds(data_frame) -> pd.DataFrame:
+
+        """
+        Converts timestamp column from time format (H:M:S.s) to float seconds. 
+
+        Parameters:
+            data_frame (pandas.DataFrame): The DataFrame from which columns are to be dropped.
+
+        Returns:
+            pandas.DataFrame: The returned DataFrame only has total time in seconds in timestamp column
+
+        """
+        
+        #Convert timestamp(datetime.time) -> timestamp(datetime.timedelta)))
+        data_frame["timestamp"] = data_frame["timestamp"].apply(lambda x: pd.to_timedelta(str(x)))
+
+        #Calculate time in seconds
+        data_frame["timestamp"] = data_frame["timestamp"].dt.total_seconds()
 
         return data_frame
 
