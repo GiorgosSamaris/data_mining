@@ -2,7 +2,7 @@ import os
 # only declare constants here
 CSV_PATH =  os.path.join(os.path.dirname(__file__), "../harth/harth/")
 TXT_OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "output.txt")
-PROC_CSV_PATH = os.path.join(os.path.dirname(__file__), "../processed/")
+PROC_CSV_PATH = os.path.join(os.path.dirname(__file__), "/../processed/")
 PROCESS = False
 GRAPH = True
 

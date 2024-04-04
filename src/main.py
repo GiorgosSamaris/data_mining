@@ -36,13 +36,21 @@ def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
 def main():
 
     if(constants.PROCESS):
-        merged_df = read_data(constants.CSV_PATH, preproc=True)
+        merged_df = read_data(constants.CSV_PATH, preproc=False)
+
+        if not os.path.exists(os.path.join(os.path.dirname(__file__), "/../processed/")):
+
+            print("process folder does not exist, creating...")
+            # If it doesn't exist, create it
+            os.makedirs(os.path.join(os.path.dirname(__file__), "/../processed/"))
 
         #convert data to csv
         merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
 
     if(constants.GRAPH):
         merged_df = pd.read_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+
+        plotter.plot_gyro(merged_df)
 
         # back_sensor_df, thigh_sensor_df = csv_handler.separate_sensors(merged_df)
 
