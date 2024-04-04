@@ -2,30 +2,26 @@ import pandas as pd
 import os 
 import plotter
 import constants
-import csv_handler
+from utilities import CSVHandler as csv
+from utilities import Preprocessing as preproc
 
 
 def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
     
     homogeneous_df = pd.DataFrame()
     for file in os.listdir(constants.CSV_PATH):
-        temp_df = csv_handler.read_csv(file)
+        temp_df = csv.read_csv(file)
         if temp_df is None:
             continue
 
 
         if(preproc):
-            temp_df = csv_handler.drop_nonuniform_columns(temp_df)
+            temp_df = preproc.drop_nonuniform_columns(temp_df)
             # #Check for outliers by calculating IQR for each column
-            # temp_df = csv_handler.drop_outliers(temp_df)//    
+            # temp_df = preproc.drop_outliers(temp_df)//    
 
             #Add a column describing subject id
-            temp_df = csv_handler.add_subject_id(temp_df, file, 8)
-            separate_data = csv_handler.separate_activities(temp_df)
-            for key in separate_data:
-                print(constants.activity_id[key])
-                plotter.plot_gyro(separate_data[key])
-                input("Press Enter to continue...")
+            temp_df = preproc.add_subject_id(temp_df, file, 8)
 
         #merge the dataframes
         homogeneous_df= pd.concat([homogeneous_df, temp_df])
@@ -50,16 +46,17 @@ def main():
             os.makedirs(os.path.join(os.path.dirname(__file__), "/../processed/"))
 
         #convert data to csv
-        # merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+        merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
 
     if(constants.GRAPH):
         merged_df = pd.read_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
 
         plotter.plot_gyro(merged_df)
 
-        # back_sensor_df, thigh_sensor_df = csv_handler.separate_sensors(merged_df)
+        # back_sensor_df, thigh_sensor_df = preproc.separate_sensors(merged_df)
 
         # plot_data = back_sensor_df.loc[:,["timestamp","back_x"]]
+
 
 if __name__ == "__main__":
     main()
