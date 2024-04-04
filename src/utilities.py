@@ -27,6 +27,7 @@ class CSVHandler:
             print(csv_data_frame.info())
             print("Missing values: {}".format(csv_data_frame.isnull().sum()))
         return csv_data_frame 
+    
 
 
 class Preprocessing:
@@ -53,7 +54,7 @@ class Preprocessing:
 
         return data_frame
     
-
+    @staticmethod
     def convert_to_seconds(data_frame) -> pd.DataFrame:
 
         """

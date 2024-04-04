@@ -44,32 +44,11 @@ def main():
 
     df = preproc.drop_dates(data_frame=df)
 
-    df["timestamp"] = df["timestamp"].apply(lambda x: pd.to_timedelta(str(x)))
+    df = preproc.convert_to_seconds(data_frame=df)
 
+    plt.plot(df["timestamp"], df["back_x"])
 
-    df["timestamp"] = df["timestamp"].dt.total_seconds()
-
-    print(df)
-
-    # plt.plot(df["timestamp"], df["back_x"])
-
-    # test_date_1 = df["timestamp"].values[0]
-
-    # print("date is: {} and is type of: {}".format(test_date_1,type(test_date_1)))
-
-    # format =  "%Y-%m-%d %H:%M:%S.%f"
-
-    # dt_test_1 = datetime.datetime.strptime(test_date_1, format)
-
-    # print("date is: {} and is type of: {}".format(dt_test_1,type(dt_test_1)))
-
-    # print("time is: {}".format(dt_test_1.time()))
-
-    # df["timestamp"] = pd.to_datetime(df["timestamp"], format= format)
-
-    # df["timestamp"] = df["timestamp"].dt.time
-
-    # print("column timestamp {} is now of type {}".format(df["timestamp"].values[0],type(df["timestamp"].values[0])))
+    plt.show()
 
 
 
