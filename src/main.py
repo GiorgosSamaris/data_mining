@@ -3,7 +3,6 @@ import os
 import plotter
 import constants
 import csv_handler
-import data_processor
 
 
 def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
@@ -22,7 +21,7 @@ def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
 
             #Add a column describing subject id
             temp_df = csv_handler.add_subject_id(temp_df, file, 8)
-            separate_data = data_processor.separate_activities(temp_df)
+            separate_data = csv_handler.separate_activities(temp_df)
             for key in separate_data:
                 print(constants.activity_id[key])
                 plotter.plot_gyro(separate_data[key])
