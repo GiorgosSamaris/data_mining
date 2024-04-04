@@ -44,6 +44,11 @@ def main():
 
     df = preproc.drop_dates(data_frame=df)
 
+    df["timestamp"] = df["timestamp"].apply(lambda x: pd.to_timedelta(str(x)))
+
+
+    df["timestamp"] = df["timestamp"].dt.total_seconds()
+
     print(df)
 
     # plt.plot(df["timestamp"], df["back_x"])
