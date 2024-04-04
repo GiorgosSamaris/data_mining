@@ -3,6 +3,7 @@ import os
 import plotter
 import constants
 import csv_handler
+import data_processor
 
 
 def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
@@ -21,6 +22,11 @@ def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
 
             #Add a column describing subject id
             temp_df = csv_handler.add_subject_id(temp_df, file, 8)
+            separate_data = data_processor.separate_activities(temp_df)
+            for key in separate_data:
+                print(constants.activity_id[key])
+                plotter.plot_gyro(separate_data[key])
+                input("Press Enter to continue...")
 
         #merge the dataframes
         homogeneous_df= pd.concat([homogeneous_df, temp_df])
@@ -39,7 +45,7 @@ def main():
         merged_df = read_data(constants.CSV_PATH, preproc=True)
 
         #convert data to csv
-        merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+        # merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
 
     if(constants.GRAPH):
         merged_df = pd.read_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
@@ -47,7 +53,6 @@ def main():
         # back_sensor_df, thigh_sensor_df = csv_handler.separate_sensors(merged_df)
 
         # plot_data = back_sensor_df.loc[:,["timestamp","back_x"]]
-
 
 if __name__ == "__main__":
     main()
