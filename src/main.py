@@ -23,18 +23,18 @@ def main():
     df = pd.read_csv(constants.CSV_PATH + "S006.csv")
     df = preproc.drop_dates(data_frame=df)
     df = preproc.convert_to_seconds(data_frame=df)
-    plt.plot(df["timestamp"], df["back_x"])
-    plt.show()
+    # plt.plot(df["timestamp"], df["back_x"])
+    # plt.show()
     if(constants.PROCESS):
         merged_df = read_data(constants.CSV_PATH, preproc=False)
-        if not os.path.exists(os.path.join(os.path.dirname(__file__), "/../processed/")):
+        if not os.path.exists(constants.PROCESSED_CSV_PATH):
             print("process folder does not exist, creating...")
             # If it doesn't exist, create it
-            os.makedirs(os.path.join(os.path.dirname(__file__), "/../processed/"))
+            os.makedirs(constants.PROCESSED_CSV_PATH)
         #convert data to csv
-        merged_df.to_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+        merged_df.to_csv(constants.PROCESSED_CSV_PATH + "proc_merged.csv")
     if(constants.GRAPH):
-        merged_df = pd.read_csv(constants.PROC_CSV_PATH + "proc_merged.csv")
+        merged_df = pd.read_csv(constants.PROCESSED_CSV_PATH + "proc_merged.csv")
         plotter.plot_gyro(merged_df)
         # back_sensor_df, thigh_sensor_df = preproc.separate_sensors(merged_df)
         # plot_data = back_sensor_df.loc[:,["timestamp","back_x"]]
