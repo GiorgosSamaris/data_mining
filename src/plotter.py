@@ -8,7 +8,6 @@ def activity_pie (df_input):
     fig, ax = plt.subplots(nrows=1, ncols=1)
     cmap = plt.get_cmap("tab20")
     sampled_colors = [cmap(i) for i in range (len(num_examples_per_activity))]
-
     ax.pie(x = num_examples_per_activity, 
             colors = sampled_colors,
             labels = unique_activities, 

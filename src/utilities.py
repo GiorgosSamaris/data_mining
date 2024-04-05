@@ -45,18 +45,14 @@ class Preprocessing:
             pandas.DataFrame: The returned DataFrame only has time on the timestamp column
 
         """
-
         #Convert timestamp(str) -> timestamp(numpy.datetime64)
         data_frame["timestamp"] = pd.to_datetime(data_frame["timestamp"], format= timestamp_format)
-
         #Extract time part from timestamp (Also converts timestamp(numpy.datetime64) -> timestamp(datetime.time))
         data_frame["timestamp"] = data_frame["timestamp"].dt.time
-
         return data_frame
     
     @staticmethod
     def convert_to_seconds(data_frame) -> pd.DataFrame:
-
         """
         Converts timestamp column from time format (H:M:S.s) to float seconds. 
 
@@ -67,13 +63,10 @@ class Preprocessing:
             pandas.DataFrame: The returned DataFrame only has total time in seconds in timestamp column
 
         """
-        
         #Convert timestamp(datetime.time) -> timestamp(datetime.timedelta)))
         data_frame["timestamp"] = data_frame["timestamp"].apply(lambda x: pd.to_timedelta(str(x)))
-
         #Calculate time in seconds
         data_frame["timestamp"] = data_frame["timestamp"].dt.total_seconds()
-
         return data_frame
 
     @staticmethod
@@ -92,13 +85,11 @@ class Preprocessing:
             data_frame.drop(['index'], axis='columns', inplace= True)
             if verbose:
                 print("Removed column 'index'")
-
         if "Unknown: 0" in data_frame.columns:
             data_frame.drop(['Unknown: 0'], axis='columns', inplace= True)
             if verbose:
                 print("Removed column 'Unnamed: 0'")
         return data_frame
-
 
     @staticmethod
     def drop_outliers(data_frame, verbose = False):
@@ -119,18 +110,14 @@ class Preprocessing:
             Q3 = data_frame[column].quantile(0.75)
             IQR = Q3 - Q1
             threshold = 1.5
-            
             data_frame[(data_frame[column] < Q1 - threshold * IQR) | (data_frame[column] > Q3 + threshold * IQR)] = data_frame[column].median()
-            
         if verbose:
             print("Size of file after dropping outliers: {}".format(data_frame.shape))
-
         return data_frame
 
         
     @staticmethod
     def separate_sensors(data_frame):
-
         """
         Given a data frame it separates sensor readings into to different data frames
 
@@ -142,21 +129,16 @@ class Preprocessing:
             back_sensor_data (pandas.DataFrame), thigh_sensor_data (pandas.DataFrame)
         """
         if "subject_id" in data_frame.columns:
-
             back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z", "subject_id"]]
             thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z", "subject_id"]]
-
         else:
-
             back_sensor_data = data_frame[["timestamp","back_x", "back_y", "back_z"]]
             thigh_sensor_data = data_frame[["timestamp","thigh_x", "thigh_y", "thigh_z"]]
-
         return back_sensor_data, thigh_sensor_data
 
 
     @staticmethod
     def add_subject_id(data_frame, file_name, column_pos = 8):
-
         """
         Given a data frame it separates sensor readings into to different data frames
 
@@ -169,16 +151,11 @@ class Preprocessing:
         Returns:
             data_frame (pandas.DataFrame)
         """
-
         #get subject id
         s_name = file_name.split('.')[0]
         s_id = constants.subject_id[s_name]
-
-        #Add id of subject as an extra column
         data_frame.insert(column_pos, "subject_id", s_id)
-
         return data_frame
-
 
     @staticmethod
     def separate_activities(data_frame):
