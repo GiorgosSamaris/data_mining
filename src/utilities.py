@@ -1,8 +1,7 @@
 import pandas as pd
 import numpy as np
 import constants
-
-
+import datetime
 
 class CSVHandler:
 
@@ -46,7 +45,7 @@ class Preprocessing:
 
         """
         #Convert timestamp(str) -> timestamp(numpy.datetime64)
-        data_frame["timestamp"] = pd.to_datetime(data_frame["timestamp"], format= timestamp_format)
+        data_frame["timestamp"] = pd.to_datetime(data_frame["timestamp"])
         #Extract time part from timestamp (Also converts timestamp(numpy.datetime64) -> timestamp(datetime.time))
         data_frame["timestamp"] = data_frame["timestamp"].dt.time
         return data_frame
@@ -64,7 +63,7 @@ class Preprocessing:
 
         """
         #Convert timestamp(datetime.time) -> timestamp(datetime.timedelta)))
-        data_frame["timestamp"] = data_frame["timestamp"].apply(lambda x: pd.to_timedelta(str(x)))
+        data_frame["timestamp"] = pd.to_timedelta(data_frame["timestamp"].astype(str))
         #Calculate time in seconds
         data_frame["timestamp"] = data_frame["timestamp"].dt.total_seconds()
         return data_frame
