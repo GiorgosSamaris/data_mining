@@ -20,9 +20,18 @@ def read_data(folder_path = ".",preproc = False) -> pd.DataFrame:
     return homogeneous_df        
 
 def main():
+    # add time for each function call
     df = pd.read_csv(constants.CSV_PATH + "S006.csv")
     df = preproc.drop_dates(data_frame=df)
     df = preproc.convert_to_seconds(data_frame=df)
+    df = preproc.add_subject_id(data_frame=df, file_name="S006.csv", column_pos=8)
+    print(df.size)
+    df_windowed = preproc.window_average(data_frame=df, window_size=500)
+    print(df_windowed.size)
+    print(df_windowed.head(1))
+    print(df.head(1))
+    plotter.plot_gyro(df_windowed)
+    plotter.plot_gyro(df)
     # plt.plot(df["timestamp"], df["back_x"])
     # plt.show()
     if(constants.PROCESS):

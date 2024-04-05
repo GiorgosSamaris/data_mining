@@ -172,3 +172,24 @@ class Preprocessing:
         for i in np.unique(data_frame['label']):
             separated_data[i] = data_frame[data_frame['label'] == i]
         return separated_data
+    
+    # use pd.rollingwindow, set back_x, back_y, back_z, thigh_x, thigh_y, thigh_z 
+    # as window average and label as label with most occurences in the window
+    # leave subject_id as is
+    # drop datetime
+    # return the new dataframe
+    @staticmethod
+    def window_average(data_frame, window_size = 200):
+        """
+        Given a data frame it separates sensor readings into to different data frames
+
+        Parameters:
+            data_frame (pandas.DataFrame): The DataFrame on which the new column containing the sunject id will be added.
+            window_size (int): The size of the window to calculate the average.
+        
+
+        Returns:
+            data_frame (pandas.DataFrame)
+        """
+        data_frame = data_frame.rolling(window_size, min_periods = 1, step=int(window_size/2)).mean()
+        return data_frame
