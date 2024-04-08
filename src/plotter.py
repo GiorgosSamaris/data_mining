@@ -67,16 +67,17 @@ def sensor_distribution(df_input):
 
 @staticmethod
 def plot_timeseries(df_input: pd.DataFrame, column_label: str | list[str], axes: plt.axes = None, **kwargs) -> plt.axes:
-    
+
     """
         Plot specified columns for given dataframe. IMPORTANT: pyplot.show() still needed to show the plotted data
 
         Parameters:
             - df_input: Input pandas DataFrame containing motion data.
             - column_label: Label of column containing the data to be plotted in respect to time
-            - axes (Default = None): Axes on which the data will be plotted. In case of none create new axes on function call
 
-            - color (Optional): Color with which the data point will be plotted. By default color will be alternated. The color pallete depends on constants.COLOR_MAP
+        Optional Parameters:
+            - axes (Default = None): Axes on which the data will be plotted. In case of none create new axes on function call
+            - color: Color with which the data point will be plotted. By default color will be alternated. The color pallete depends on constants.COLOR_MAP
             - time_column: In case another label is used than 'timestamp' 
             - title: Title of the axes. By default column_label parameter is used as a name
 
