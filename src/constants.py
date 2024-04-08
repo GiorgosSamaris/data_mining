@@ -13,3 +13,5 @@ subject_id = {"S006":6, "S008":8, "S009":9, "S010":10, "S012":12, "S013":13, "S0
 activity_id = {
     1: "walking", 2: "running", 3: "shuffling", 4: "stairs (ascending)", 5: "stairs (descending)", 6: "standing", 7: "sitting", 8: "lying", 13: "cycling (sit)", 14: "cycling (stand)", 130: "cycling (sit, inactive)", 140: "cycling (stand, inactive)"
 }
+
+COLOR_MAP = "tab20"

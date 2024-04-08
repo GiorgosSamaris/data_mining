@@ -1,6 +1,9 @@
 from matplotlib import pyplot as plt
+import matplotlib.cm as cm
 import numpy as np
 import constants
+import pandas as pd
+
 
 
 def activity_pie (df_input):
@@ -24,6 +27,7 @@ def activity_histogram(df_input):
     activity_ids = df_input['label']
     unique_activities, num_examples_per_activity = np.unique(activity_ids, return_counts = True)
     plt.hist(activity_ids, bins = len(unique_activities), range=[0, len(unique_activities)], align='mid', edgecolor='black', linewidth=1)
+    plt.title("Subject "+str(df_input['subject_id'][1]))
     plt.show()
     return
 
@@ -60,3 +64,47 @@ def sensor_distribution(df_input):
     ax[1,2].set_title("Thigh Sensor Z")
     plt.show()
     return
+
+@staticmethod
+def plot_timeseries(df_input: pd.DataFrame, column_label: str | list[str], axes: plt.axes = None, **kwargs) -> plt.axes:
+    
+    """
+        Plot specified columns for given dataframe. IMPORTANT: pyplot.show() still needed to show the plotted data
+
+        Parameters:
+            - df_input: Input pandas DataFrame containing motion data.
+            - column_label: Label of column containing the data to be plotted in respect to time
+            - axes (Default = None): Axes on which the data will be plotted. In case of none create new axes on function call
+
+            - color (Optional): Color with which the data point will be plotted. By default color will be alternated. The color pallete depends on constants.COLOR_MAP
+            - time_column: In case another label is used than 'timestamp' 
+            - title: Title of the axes. By default column_label parameter is used as a name
+
+        Returns:
+            Any
+    """
+    #Init static var rotating_index 
+    if not hasattr(plot_timeseries, "rotating_index"):
+        plot_timeseries.rotating_index = 0
+        
+
+    if axes == None:
+        figure, axes = plt.subplots()
+
+    time_column = kwargs.get('time_column', "timestamp")    #In case a custom label for time column is used
+    title = kwargs.get('title', column_label)
+
+    #Use rotating color palette unless stated otherwise
+    cmap = cm.get_cmap(constants.COLOR_MAP).colors
+    plot_timeseries.rotating_index += 1 % len(cmap)
+    color = kwargs.get('color', cmap[plot_timeseries.rotating_index])
+
+
+    axes.plot(df_input[time_column], df_input[column_label],color = color)
+    axes.set_title(title)
+
+    return
+
+
+
+    
