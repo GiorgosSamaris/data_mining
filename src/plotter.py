@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import constants
 
+
 def activity_pie (df_input):
     activity_ids = df_input['label']
     unique_activities, num_examples_per_activity = np.unique(activity_ids, return_counts = True)
