@@ -87,6 +87,10 @@ class Preprocessing:
         if "Unknown: 0" in data_frame.columns:
             data_frame.drop(['Unknown: 0'], axis='columns', inplace= True)
             if verbose:
+                print("Removed column 'UnKnown: 0'")
+        if "Unnamed: 0" in data_frame.columns:
+            data_frame.drop(['Unnamed: 0'], axis='columns', inplace= True)
+            if verbose:
                 print("Removed column 'Unnamed: 0'")
         return data_frame
 
@@ -173,9 +177,9 @@ class Preprocessing:
         return separated_data
     
     @staticmethod
-    def window_data(df_input, window_size = 200):
+    def window_data(df_input, window_size = 200, step = 100):
         df_subset = df_input[['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']];
-        data_frame = df_subset.rolling(window_size, min_periods = 1, step=int(window_size/2)).mean()
-        data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0])
-        data_frame['subject_id'] = df_input['subject_id']
+        data_frame = df_subset.rolling(window_size, min_periods = 1, step=step).mean()
+        data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0]).astype(int)
+        data_frame['subject_id'] = df_input['subject_id'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0]).astype(int)
         return data_frame
