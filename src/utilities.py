@@ -71,7 +71,7 @@ class Preprocessing:
     @staticmethod
     def drop_nonuniform_columns(data_frame, verbose=False):
         """
-        Drop columns 'index' and 'Unknown: 0' from the DataFrame if they exist.
+        Drop columns 'index', 'Unnamed: 0' and 'Unknown: 0' from the DataFrame if they exist.
 
         Parameters:
             data_frame (pandas.DataFrame): The DataFrame from which columns are to be dropped.
@@ -178,6 +178,17 @@ class Preprocessing:
     
     @staticmethod
     def window_data(df_input, window_size = 200, step = 100):
+        """
+            Process input data frame using rolling window averaging (on motion data columns) and mode (on label and subject_id) calculation.
+
+            Parameters:
+            - df_input: Input pandas DataFrame containing motion data.
+            - window_size (optional): Size of the rolling window. Default is 200.
+            - step (optional): Step size for the rolling window. Default is 100.
+
+            Returns:
+            - data_frame: Processed DataFrame containing windowed data.
+        """
         df_subset = df_input[['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']];
         data_frame = df_subset.rolling(window_size, min_periods = 1, step=step).mean()
         data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0]).astype(int)
