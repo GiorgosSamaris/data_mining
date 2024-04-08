@@ -173,7 +173,7 @@ class Preprocessing:
         return separated_data
     
     @staticmethod
-    def window_average(df_input, window_size = 200):
+    def window_data(df_input, window_size = 200):
         df_subset = df_input[['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']];
         data_frame = df_subset.rolling(window_size, min_periods = 1, step=int(window_size/2)).mean()
         data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0])
