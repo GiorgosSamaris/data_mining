@@ -59,3 +59,21 @@ def sensor_distribution(df_input):
     ax[1,2].set_title("Thigh Sensor Z")
     plt.show()
     return
+def plot_activity_axis_distribution(df_input, activity_id):
+    df_input = df_input[df_input['label'] == activity_id]
+    fig, ax = plt.subplots(nrows=2, ncols=3)
+    ax[0,0].hist(df_input['back_x'], bins=1000, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[0,0].set_title("Back Sensor X")
+    ax[0,1].hist(df_input['back_y'], bins=1000, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[0,1].set_title("Back Sensor Y")
+    ax[0,2].hist(df_input['back_z'], bins=1000, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[0,2].set_title("Back Sensor Z")
+    ax[1,0].hist(df_input['thigh_x'], bins=1000, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[1,0].set_title("Thigh Sensor X")
+    ax[1,1].hist(df_input['thigh_y'], bins=1000, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[1,1].set_title("Thigh Sensor Y")
+    ax[1,2].hist(df_input['thigh_z'], bins=1000, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[1,2].set_title("Thigh Sensor Z")
+    fig.suptitle(constants.activity_id[activity_id])
+    plt.show()
+    return
