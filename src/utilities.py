@@ -15,9 +15,9 @@ class CSVHandler:
         Returns:
             pandas.DataFrame or None: The DataFrame containing the CSV data if the file exists and is not ".gitignore", otherwise returns None.
         """
-        if input_file == ".gitignore":
+        if ".gitignore" in input_file:
             return None
-        csv_data_frame = pd.read_csv(constants.CSV_PATH + input_file)
+        csv_data_frame = pd.read_csv(input_file)
         if verbose:
             print("---------------------------------------------------------------------------------------------\n")
             print("File: {}".format(input_file))
@@ -69,7 +69,7 @@ class Preprocessing:
         return data_frame
 
     @staticmethod
-    def drop_nonuniform_columns(data_frame, verbose=False):
+    def drop_nonuniform_columns(data_frame, verbose=False) -> pd.DataFrame:
         """
         Drop columns 'index', 'Unnamed: 0' and 'Unknown: 0' from the DataFrame if they exist.
 
