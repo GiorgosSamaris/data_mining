@@ -191,6 +191,7 @@ class Preprocessing:
         """
         df_subset = df_input[['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']];
         data_frame = df_subset.rolling(window_size, min_periods = 1, step=step).mean()
-        data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0]).astype(int)
-        data_frame['subject_id'] = df_input['subject_id'].rolling(window_size, min_periods = 1, step=int(window_size/2)).apply(lambda x: x.mode()[0]).astype(int)
+        data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
+        if 'subject_id' in df_input.columns:
+            data_frame['subject_id'] = df_input['subject_id'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
         return data_frame
