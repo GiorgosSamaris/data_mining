@@ -42,6 +42,10 @@ def get_metrics(model, X_train, X_test, y_train, y_test):
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
     disp.plot()
     plt.show()
+    norm_cm = cm.astype('float') / cm.sum(axis=1)
+    disp = ConfusionMatrixDisplay(confusion_matrix=norm_cm, display_labels=model.classes_)
+    disp.plot()
+    plt.show()
     # Evaluate the model and append its score to model_scores
     #return model.score(X_test, y_test)
     metric_dict = {
