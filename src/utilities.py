@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import constants
-import datetime
+import matplotlib.pyplot as plt
 
 class CSVHandler:
 
@@ -192,12 +192,12 @@ class Preprocessing:
         df_subset = df_input[['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']];
         data_frame = df_subset.rolling(window_size, min_periods = 1, step=step).mean()
         data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
-        data_frame['variance_back_x'] = df_subset['back_x'].rolling(window_size, min_periods = 1, step=step).var().fillna(method = 'bfill')
-        data_frame['variance_back_y'] = df_subset['back_y'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
-        data_frame['variance_back_z'] = df_subset['back_z'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
-        data_frame['variance_thigh_y'] = df_subset['thigh_y'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
-        data_frame['variance_thigh_z'] = df_subset['thigh_z'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
-        data_frame['variance_thigh_x'] = df_subset['thigh_x'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
+        data_frame['variance_back_x'] = df_subset['back_x'].rolling(window_size, min_periods = 1, step=step).var().bfill()
+        data_frame['variance_back_y'] = df_subset['back_y'].rolling(window_size, min_periods = 1, step=step).var().bfill()
+        data_frame['variance_back_z'] = df_subset['back_z'].rolling(window_size, min_periods = 1, step=step).var().bfill()
+        data_frame['variance_thigh_y'] = df_subset['thigh_y'].rolling(window_size, min_periods = 1, step=step).var().bfill()
+        data_frame['variance_thigh_z'] = df_subset['thigh_z'].rolling(window_size, min_periods = 1, step=step).var().bfill()
+        data_frame['variance_thigh_x'] = df_subset['thigh_x'].rolling(window_size, min_periods = 1, step=step).var().bfill()
         if 'subject_id' in df_input.columns:
             data_frame['subject_id'] = df_input['subject_id'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
         return data_frame
@@ -230,3 +230,43 @@ class Preprocessing:
             print("---------------------------------------------------------------------------------------------\n")
         return mean, median, std, min_val, max_val, variance
     
+    # def calculate_correlation(df_input, plot = False):
+    #     """
+    #     Calculate the correlation matrix of the input DataFrame.
+
+    #     Parameters:
+    #         df_input (pandas.DataFrame): The DataFrame for which the correlation matrix is to be calculated.
+
+    #     Returns:
+    #         pandas.DataFrame: The correlation matrix of the input DataFrame.
+    #     """
+    #     corr_matrix = df_input.corr()   
+        
+    #     if plot:
+    #     # Set up the matplotlib figure
+    #     plt.figure(figsize=(8, 6))
+
+    #     # Create the heatmap using imshow
+    #     plt.imshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
+
+    #     # Add color bar
+    #     plt.colorbar()
+
+    #     # Add titles and labels
+    #     plt.title('Correlation Matrix Heatmap')
+
+    #     # Set x and y ticks
+    #     plt.xticks(ticks=np.arange(len(corr_matrix.columns)), labels=corr_matrix.columns)
+    #     plt.yticks(ticks=np.arange(len(corr_matrix.columns)), labels=corr_matrix.columns)
+
+    #     # Rotate the x labels for better readability
+    #     plt.xticks(rotation=45)
+
+    #     # Add the correlation values as annotations
+    #     for i in range(len(corr_matrix.columns)):
+    #         for j in range(len(corr_matrix.columns)):
+    #             plt.text(j, i, f'{corr_matrix.iloc[i, j]:.2f}', ha='center', va='center', color='black')
+
+    #     # Display the plot
+    #     plt.show()
+    #     return 

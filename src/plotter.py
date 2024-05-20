@@ -130,4 +130,31 @@ def plot_timeseries(df_input: pd.DataFrame, column_label: str | list[str], axes:
 
 
 
-    
+def plot_matrix(matrix: np.ndarray|pd.DataFrame): 
+
+    # Set up the matplotlib figure
+    plt.figure(figsize=(8, 6))
+
+    # Create the heatmap using imshow
+    plt.imshow(matrix, cmap='coolwarm', vmin=-1, vmax=1)
+
+    # Add color bar
+    plt.colorbar()
+
+    # Add titles and labels
+    plt.title('Correlation Matrix Heatmap')
+
+    # Set x and y ticks
+    plt.xticks(ticks=np.arange(len(matrix.columns)), labels=matrix.columns)
+    plt.yticks(ticks=np.arange(len(matrix.columns)), labels=matrix.columns)
+
+    # Rotate the x labels for better readability
+    plt.xticks(rotation=45)
+
+    # Add the correlation values as annotations
+    for i in range(len(matrix.columns)):
+        for j in range(len(matrix.columns)):
+            plt.text(j, i, f'{matrix.iloc[i, j]:.2f}', ha='center', va='center', color='black')
+
+    # Display the plot
+    plt.show()

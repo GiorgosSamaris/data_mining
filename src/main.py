@@ -1,15 +1,14 @@
 import pandas as pd
 import os 
 import plotter
+from classification import Classifiers 
 import constants
 from utilities import CSVHandler as csv
 from utilities import Preprocessing as preproc
 import matplotlib.pyplot as plt
-from sklearn import naive_bayes as nb 
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
 import numpy as np
 def read_data(file_path = ".") -> dict[pd.DataFrame]:
     dataframes = {}
@@ -23,39 +22,7 @@ def read_data(file_path = ".") -> dict[pd.DataFrame]:
 
     return dataframes
 
-def get_metrics(model, X_train, X_test, y_train, y_test):
-    """
-    Fits and evaluates given machine learning model.
-    model : Scikit-Learn machine learning model
-    X_train : training data
-    X_test : testing data
-    y_train : training labels
-    y_test : test labels
-    """
-    # Set random seed
-    np.random.seed(42)
-    # Fit the model to the data
-    model.fit(X_train, y_train)
-    # Get Predictions
-    y_preds = model.predict(X_test)
-    cm = confusion_matrix(y_test, y_preds, labels=model.classes_)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
-    disp.plot()
-    plt.show()
-    # normalize and plot confusion matrix
-    norm_cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    disp = ConfusionMatrixDisplay(confusion_matrix=norm_cm, display_labels=model.classes_)
-    disp.plot()
-    plt.show()
-    # Evaluate the model and append its score to model_scores
-    #return model.score(X_test, y_test)
-    metric_dict = {
-    'accuracy_score' : accuracy_score(y_test, y_preds),
-    'precision_score' : precision_score(y_test, y_preds, average='weighted', labels=np.unique(y_preds)),
-    'recall_score' : recall_score(y_test, y_preds, average='weighted'),
-    'f1_score' : f1_score(y_test, y_preds, average='weighted')
-    }
-    return metric_dict
+
 
 
 def main():
@@ -77,38 +44,12 @@ def main():
             df = preproc.drop_nonuniform_columns(df)
         if constants.OPTIONS & 64 == constants.MERGE:
             homogeneous_df = pd.concat([homogeneous_df, df])
-    corr_matrix = homogeneous_df.corr()   
-    # Set up the matplotlib figure
-    plt.figure(figsize=(8, 6))
 
-    # Create the heatmap using imshow
-    plt.imshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
-
-    # Add color bar
-    plt.colorbar()
-
-    # Add titles and labels
-    plt.title('Correlation Matrix Heatmap')
-
-    # Set x and y ticks
-    plt.xticks(ticks=np.arange(len(corr_matrix.columns)), labels=corr_matrix.columns)
-    plt.yticks(ticks=np.arange(len(corr_matrix.columns)), labels=corr_matrix.columns)
-
-    # Rotate the x labels for better readability
-    plt.xticks(rotation=45)
-
-    # Add the correlation values as annotations
-    for i in range(len(corr_matrix.columns)):
-        for j in range(len(corr_matrix.columns)):
-            plt.text(j, i, f'{corr_matrix.iloc[i, j]:.2f}', ha='center', va='center', color='black')
-
-    # Display the plot
-    plt.show()
-        # preproc.basic_statistics(homogeneous_df, True)
-        # X = homogeneous_df[["thigh_x", 'back_x', 'thigh_y', 'back_y', 'thigh_z', 'back_z', 'variance_back_x', 'variance_back_y', 'variance_back_z', 'variance_thigh_x', 'variance_thigh_y', 'variance_thigh_z']]
-        # Y = homogeneous_df[["label"]]
-        # X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
-        # model = GaussianNB()
-        # print(get_metrics(model,X_train,X_test,y_train,y_test))
+    
+    X = homogeneous_df[["thigh_x", 'back_x', 'thigh_y', 'back_y', 'thigh_z', 'back_z', 'variance_back_x', 'variance_back_y', 'variance_back_z', 'variance_thigh_x', 'variance_thigh_y', 'variance_thigh_z']]
+    Y = homogeneous_df[["label"]]
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
+    model = GaussianNB()
+    print(Classifiers.get_metrics(model,X_train,X_test,y_train,y_test))
 if __name__ == "__main__":
     main()
