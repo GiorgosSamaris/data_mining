@@ -192,6 +192,41 @@ class Preprocessing:
         df_subset = df_input[['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']];
         data_frame = df_subset.rolling(window_size, min_periods = 1, step=step).mean()
         data_frame['label'] = df_input['label'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
+        data_frame['variance_back_x'] = df_subset['back_x'].rolling(window_size, min_periods = 1, step=step).var().fillna(method = 'bfill')
+        data_frame['variance_back_y'] = df_subset['back_y'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
+        data_frame['variance_back_z'] = df_subset['back_z'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
+        data_frame['variance_thigh_y'] = df_subset['thigh_y'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
+        data_frame['variance_thigh_z'] = df_subset['thigh_z'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
+        data_frame['variance_thigh_x'] = df_subset['thigh_x'].rolling(window_size, min_periods = 1, step=step).var().fillna(method='bfill')
         if 'subject_id' in df_input.columns:
             data_frame['subject_id'] = df_input['subject_id'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
         return data_frame
+    
+
+    def basic_statistics(df_input, verbose = False):
+        columns = ['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']
+        mean = []
+        median = []
+        std = []
+        min_val = []
+        max_val = []
+        variance = []
+        for col in columns:
+            mean.append(df_input[col].mean())
+            median.append(df_input[col].median())
+            std.append(df_input[col].std())
+            min_val.append(df_input[col].min())
+            max_val.append(df_input[col].max())
+            variance.append(df_input[col].var())
+        if verbose:
+            print("---------------------------------------------------------------------------------------------\n")
+            print("Columns: {}".format(columns))
+            print("Mean: {}".format(mean))
+            print("Median: {}".format(median))
+            print("Standard Deviation: {}".format(std))
+            print("Minimum Value: {}".format(min_val))
+            print("Maximum Value: {}".format(max_val))
+            print("Variance: {}".format(variance))
+            print("---------------------------------------------------------------------------------------------\n")
+        return mean, median, std, min_val, max_val, variance
+    
