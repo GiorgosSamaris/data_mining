@@ -8,6 +8,7 @@ from utilities import Preprocessing as preproc
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 
 import numpy as np
 def read_data(file_path = ".") -> dict[pd.DataFrame]:
@@ -49,7 +50,8 @@ def main():
     X = homogeneous_df[["thigh_x", 'back_x', 'thigh_y', 'back_y', 'thigh_z', 'back_z', 'variance_back_x', 'variance_back_y', 'variance_back_z', 'variance_thigh_x', 'variance_thigh_y', 'variance_thigh_z']]
     Y = homogeneous_df[["label"]]
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
-    model = GaussianNB()
+    # model = GaussianNB()
+    model = RandomForestClassifier()
     print(Classifiers.get_metrics(model,X_train,X_test,y_train,y_test))
 if __name__ == "__main__":
     main()
