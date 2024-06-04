@@ -230,11 +230,36 @@ class Preprocessing:
             print("---------------------------------------------------------------------------------------------\n")
         return mean, median, std, min_val, max_val, variance
     
+    
+
+    def group_activities(df_input):
+        column_labels = ["subject_id","1","2","3","4","5","6","7","8","13","14","130","140"]
+        df_output = pd.DataFrame(columns=column_labels)
+        for subject in np.unique(df_input["subject_id"]):
+            temp_df = pd.DataFrame(columns=column_labels)
+            for label in np.unique(df_input['label']):
+                label_duration = df_input[(df_input['subject_id'] == subject) & (df_input['label'] == label)].shape[0] * 0.02
+                temp_df[str(label)] = [label_duration]
+            temp_df["subject_id"] = subject
+            df_output = pd.concat([df_output, temp_df], ignore_index=True)
+        return df_output
+    
+    
+    # def activity_time(df_input, verbose = False):
+    #     df_output = pd.DataFrame(columns=['subject_id', 'label', 'duration'])
+    #     for subject_id in np.unique(df_input['subject_id']):
+    #         for label in np.unique(df_input['label']):
+    #             duration = df_input[(df_input['subject_id'] == subject_id) & (df_input['label'] == label)].shape[0] * 0.02
+    #             temp_df = pd.DataFrame([[subject_id, label, duration]], columns=['subject_id', 'label', 'duration'])
+    #             df_output = pd.concat([df_output, temp_df], ignore_index=True)
+    #     return df_output
+
+
     # def calculate_correlation(df_input, plot = False):
     #     """
     #     Calculate the correlation matrix of the input DataFrame.
 
-    #     Parameters:
+    #     Parameters:   
     #         df_input (pandas.DataFrame): The DataFrame for which the correlation matrix is to be calculated.
 
     #     Returns:
