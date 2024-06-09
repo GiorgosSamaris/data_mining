@@ -202,7 +202,7 @@ class Preprocessing:
             data_frame['subject_id'] = df_input['subject_id'].rolling(window_size, min_periods = 1, step=step).apply(lambda x: x.mode()[0]).astype(int)
         return data_frame
     
-
+    @staticmethod
     def basic_statistics(df_input, verbose = False):
         columns = ['back_x', 'back_y', 'back_z', 'thigh_x', 'thigh_y', 'thigh_z']
         mean = []
@@ -228,10 +228,10 @@ class Preprocessing:
             print("Maximum Value: {}".format(max_val))
             print("Variance: {}".format(variance))
             print("---------------------------------------------------------------------------------------------\n")
-        return mean, median, std, min_val, max_val, variance
+        return pd.DataFrame({'columns': columns, 'mean': mean, 'median': median, 'std': std, 'min': min_val, 'max': max_val, 'variance': variance})
     
     
-
+    @staticmethod
     def group_activities(df_input):
         column_labels = ["subject_id","1","2","3","4","5","6","7","8","13","14","130","140"]
         df_output = pd.DataFrame(columns=column_labels)
@@ -244,7 +244,7 @@ class Preprocessing:
             df_output = pd.concat([df_output, temp_df], ignore_index=True)
         return df_output
     
-    
+    # @staticmethod
     # def activity_time(df_input, verbose = False):
     #     df_output = pd.DataFrame(columns=['subject_id', 'label', 'duration'])
     #     for subject_id in np.unique(df_input['subject_id']):
@@ -253,45 +253,3 @@ class Preprocessing:
     #             temp_df = pd.DataFrame([[subject_id, label, duration]], columns=['subject_id', 'label', 'duration'])
     #             df_output = pd.concat([df_output, temp_df], ignore_index=True)
     #     return df_output
-
-
-    # def calculate_correlation(df_input, plot = False):
-    #     """
-    #     Calculate the correlation matrix of the input DataFrame.
-
-    #     Parameters:   
-    #         df_input (pandas.DataFrame): The DataFrame for which the correlation matrix is to be calculated.
-
-    #     Returns:
-    #         pandas.DataFrame: The correlation matrix of the input DataFrame.
-    #     """
-    #     corr_matrix = df_input.corr()   
-        
-    #     if plot:
-    #     # Set up the matplotlib figure
-    #     plt.figure(figsize=(8, 6))
-
-    #     # Create the heatmap using imshow
-    #     plt.imshow(corr_matrix, cmap='coolwarm', vmin=-1, vmax=1)
-
-    #     # Add color bar
-    #     plt.colorbar()
-
-    #     # Add titles and labels
-    #     plt.title('Correlation Matrix Heatmap')
-
-    #     # Set x and y ticks
-    #     plt.xticks(ticks=np.arange(len(corr_matrix.columns)), labels=corr_matrix.columns)
-    #     plt.yticks(ticks=np.arange(len(corr_matrix.columns)), labels=corr_matrix.columns)
-
-    #     # Rotate the x labels for better readability
-    #     plt.xticks(rotation=45)
-
-    #     # Add the correlation values as annotations
-    #     for i in range(len(corr_matrix.columns)):
-    #         for j in range(len(corr_matrix.columns)):
-    #             plt.text(j, i, f'{corr_matrix.iloc[i, j]:.2f}', ha='center', va='center', color='black')
-
-    #     # Display the plot
-    #     plt.show()
-    #     return 

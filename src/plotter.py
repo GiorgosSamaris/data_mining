@@ -5,7 +5,7 @@ import constants
 import pandas as pd
 
 
-
+@staticmethod
 def activity_pie (df_input):
     activity_ids = df_input['label']
     unique_activities, num_examples_per_activity = np.unique(activity_ids, return_counts = True)
@@ -23,6 +23,7 @@ def activity_pie (df_input):
     plt.show()
     return
 
+@staticmethod
 def activity_histogram(df_input):
     activity_ids = df_input['label']
     unique_activities, num_examples_per_activity = np.unique(activity_ids, return_counts = True)
@@ -31,6 +32,7 @@ def activity_histogram(df_input):
     plt.show()
     return
 
+@staticmethod
 def plot_accel(df_input):
     fig, ax = plt.subplots(nrows=2, ncols=1)
     ax[0].plot(df_input['back_x'], label='back_x')
@@ -47,25 +49,25 @@ def plot_accel(df_input):
     ax[1].legend(loc='best')
     plt.show()
 
-# plot distribuiton of each sensor, back_x, back_y, back_z, thigh_x, thigh_y, thigh_z
+@staticmethod
 def sensor_distribution(df_input):
     fig, ax = plt.subplots(nrows=2, ncols=3)
-    ax[0,0].hist(df_input['back_x'], bins=100, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[0,0].hist(df_input['back_x'], bins=1000, range=[-8.5, 8.5], align='mid', edgecolor='black', linewidth=1)
     ax[0,0].set_title("Back Sensor X")
-    ax[0,1].hist(df_input['back_y'], bins=100, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[0,1].hist(df_input['back_y'], bins=1000, range=[-8.5, 8.5], align='mid', edgecolor='black', linewidth=1)
     ax[0,1].set_title("Back Sensor Y")
-    ax[0,2].hist(df_input['back_z'], bins=100, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[0,2].hist(df_input['back_z'], bins=1000, range=[-8.5, 8.5], align='mid', edgecolor='black', linewidth=1)
     ax[0,2].set_title("Back Sensor Z")
-    ax[1,0].hist(df_input['thigh_x'], bins=100, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[1,0].hist(df_input['thigh_x'], bins=1000, range=[-8.5, 8.5], align='mid', edgecolor='black', linewidth=1)
     ax[1,0].set_title("Thigh Sensor X")
-    ax[1,1].hist(df_input['thigh_y'], bins=100, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[1,1].hist(df_input['thigh_y'], bins=1000, range=[-8.5, 8.5], align='mid', edgecolor='black', linewidth=1)
     ax[1,1].set_title("Thigh Sensor Y")
-    ax[1,2].hist(df_input['thigh_z'], bins=100, range=[-1.5, 1.5], align='mid', edgecolor='black', linewidth=1)
+    ax[1,2].hist(df_input['thigh_z'], bins=1000, range=[-8.5, 8.5], align='mid', edgecolor='black', linewidth=1)
     ax[1,2].set_title("Thigh Sensor Z")
     plt.show()
     return
 
-
+@staticmethod
 def plot_activity_axis_distribution(df_input, activity_id):
     df_input = df_input[df_input['label'] == activity_id]
     fig, ax = plt.subplots(nrows=2, ncols=3)
@@ -106,55 +108,30 @@ def plot_timeseries(df_input: pd.DataFrame, column_label: str | list[str], axes:
         Returns:
             Any
     """
-    #Init static var rotating_index 
     if not hasattr(plot_timeseries, "rotating_index"):
         plot_timeseries.rotating_index = 0
-        
-
     if axes == None:
         figure, axes = plt.subplots()
-
     time_column = kwargs.get('time_column', "timestamp")    #In case a custom label for time column is used
     title = kwargs.get('title', column_label)
-
-    #Use rotating color palette unless stated otherwise
     cmap = cm.get_cmap(constants.COLOR_MAP).colors
     plot_timeseries.rotating_index += 1 % len(cmap)
     color = kwargs.get('color', cmap[plot_timeseries.rotating_index])
-
-
     axes.plot(df_input[time_column], df_input[column_label],color = color)
     axes.set_title(title)
-
     return
 
 
-
-def plot_matrix(matrix: np.ndarray|pd.DataFrame): 
-
-    # Set up the matplotlib figure
+@staticmethod
+def plot_corr_matrix(matrix: np.ndarray|pd.DataFrame): 
     plt.figure(figsize=(8, 6))
-
-    # Create the heatmap using imshow
     plt.imshow(matrix, cmap='coolwarm', vmin=-1, vmax=1)
-
-    # Add color bar
     plt.colorbar()
-
-    # Add titles and labels
     plt.title('Correlation Matrix Heatmap')
-
-    # Set x and y ticks
     plt.xticks(ticks=np.arange(len(matrix.columns)), labels=matrix.columns)
     plt.yticks(ticks=np.arange(len(matrix.columns)), labels=matrix.columns)
-
-    # Rotate the x labels for better readability
     plt.xticks(rotation=45)
-
-    # Add the correlation values as annotations
     for i in range(len(matrix.columns)):
         for j in range(len(matrix.columns)):
             plt.text(j, i, f'{matrix.iloc[i, j]:.2f}', ha='center', va='center', color='black')
-
-    # Display the plot
     plt.show()

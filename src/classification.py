@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
+
 class Classifiers:
     def __init__(self) -> None:
         pass
