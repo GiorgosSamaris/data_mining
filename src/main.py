@@ -14,6 +14,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.cluster import KMeans, AgglomerativeClustering
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+from sklearn.decomposition import PCA
 def read_data(file_path = ".") -> dict[pd.DataFrame]:
     dataframes = {}
     
@@ -93,12 +94,36 @@ def main():
         cluster_0_avg.columns = cluster_0.columns[1:-1]
         cluster_1_avg = pd.DataFrame(cluster_1.iloc[:,1:-1].mean()).transpose()
         cluster_1_avg.columns = cluster_1.columns[1:-1]
-        fig,ax = plt.subplots(2,1)
+        fig, ax = plt.subplots(2, 1, figsize=(8, 8))
         ax[0].barh(cluster_0_avg.columns, cluster_0_avg.iloc[0], color='blue', label='Cluster 0')
+        ax[0].set_xlabel('Value')
+        ax[0].set_ylabel('Column')
+        ax[0].legend(loc='best')
         ax[1].barh(cluster_1_avg.columns, cluster_1_avg.iloc[0], color='red', label='Cluster 1')
-        plt.xlabel('Value')
-        plt.ylabel('Column')
-        plt.legend()
+        ax[1].set_xlabel('Value')
+        ax[1].set_ylabel('Column')
+        ax[1].legend(loc='best')
+        plt.tight_layout()
+        plt.show()
+        pca = PCA(n_components=2)
+        principalComponents = pca.fit_transform(scaled_df)
+        principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+        finalDf = pd.concat([principalDf, grouped_df[['cluster']]], axis = 1)
+        fig = plt.figure(figsize = (8,8))
+        ax = fig.add_subplot(1,1,1)
+        ax.set_xlabel('Principal Component 1', fontsize = 15)
+        ax.set_ylabel('Principal Component 2', fontsize = 15)
+        ax.set_title('2 component PCA', fontsize = 20)
+        targets = [0, 1]
+        colors = ['r', 'g']
+        for target, color in zip(targets,colors):
+            indicesToKeep = finalDf['cluster'] == target
+            ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+                    , finalDf.loc[indicesToKeep, 'principal component 2']
+                    , c = color
+                    , s = 50)
+        ax.legend(targets)
+        ax.grid()
         plt.show()
 
     if constants.CLUSTERING_OPTIONS & 4 == constants.ELBOW_TEST:
@@ -125,13 +150,40 @@ def main():
         cluster_1_avg.columns = cluster_1.columns[1:-1]
         cluster_2_avg = pd.DataFrame(cluster_2.iloc[:,1:-1].mean()).transpose()
         cluster_2_avg.columns = cluster_2.columns[1:-1]
-        fig,ax = plt.subplots(3,1)
+        fig, ax = plt.subplots(3, 1, figsize=(8, 12))
         ax[0].barh(cluster_0_avg.columns, cluster_0_avg.iloc[0], color='blue', label='Cluster 0')
+        ax[0].set_xlabel('Value')
+        ax[0].set_ylabel('Column')
+        ax[0].legend(loc='best')
         ax[1].barh(cluster_1_avg.columns, cluster_1_avg.iloc[0], color='red', label='Cluster 1')
-        ax[2].barh(cluster_2_avg.columns, cluster_2_avg.iloc[0], color='red', label='Cluster 2')
-        plt.xlabel('Value')
-        plt.ylabel('Column')
-        plt.legend()
+        ax[1].set_xlabel('Value')
+        ax[1].set_ylabel('Column')
+        ax[1].legend(loc='best')
+        ax[2].barh(cluster_2_avg.columns, cluster_2_avg.iloc[0], color='green', label='Cluster 2')
+        ax[2].set_xlabel('Value')
+        ax[2].set_ylabel('Column')
+        ax[2].legend(loc='best')
+        plt.tight_layout()
+        plt.show()
+        pca = PCA(n_components=2)
+        principalComponents = pca.fit_transform(scaled_df)
+        principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+        finalDf = pd.concat([principalDf, grouped_df[['cluster']]], axis = 1)
+        fig = plt.figure(figsize = (8,8))
+        ax = fig.add_subplot(1,1,1)
+        ax.set_xlabel('Principal Component 1', fontsize = 15)
+        ax.set_ylabel('Principal Component 2', fontsize = 15)
+        ax.set_title('2 component PCA', fontsize = 20)
+        targets = [0, 1, 2]
+        colors = ['r', 'g', 'b']
+        for target, color in zip(targets,colors):
+            indicesToKeep = finalDf['cluster'] == target
+            ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+                    , finalDf.loc[indicesToKeep, 'principal component 2']
+                    , c = color
+                    , s = 50)
+        ax.legend(targets)
+        ax.grid()
         plt.show()
         scores = []
         range_values = range(2, 10)
